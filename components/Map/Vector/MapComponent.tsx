@@ -36,7 +36,8 @@ Icon.Default.mergeOptions({
 });
 /**
  *
- * @참고자료 : https://leafletjs.com/reference.html
+ * @참고자료1 : https://leafletjs.com/reference.html
+ * @참고자료2 : https://react-leaflet.js.org/docs/example-vector-layers/
  */
 const MapComponent = () => {
   const mapRef = useRef<any>(null);

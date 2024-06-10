@@ -2,3 +2,16 @@ body {
     width: 100%;
     height: 100vh;
 }
+
+.abox {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 10px;
+    height: 30px;
+}
+
+.abox a {
+    padding: 5px;
+    margin-right: 10px;
+}

@@ -15,7 +15,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head></head>
-      <body>{children}</body>
+      <body>
+        <div className="abox">
+          <a href="/DownloadAndPrint">다운로드/프린트</a>
+          <a href="/Shape">Draw</a>
+          <a href="/Shape">Static</a>
+        </div>
+
+        {children}
+      </body>
     </html>
   );
 }

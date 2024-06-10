@@ -292,9 +292,7 @@ const MapComponent = () => {
   );
   const location = useGeoLocation();
   useEffect(() => {
-    if (location) {
-      setLoadLocation(location);
-    }
+    setLoadLocation(location);
   }, [location]);
 
   return (
