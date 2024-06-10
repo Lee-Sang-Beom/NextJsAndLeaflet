@@ -12,12 +12,14 @@
     "@types/navermaps": "^3.7.5",
     "@types/react-leaflet": "^3.0.0",
     "leaflet": "^1.9.4",
+    "leaflet-draw": "^1.0.4",
     "next": "14.2.3",
     "ol": "^9.2.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-leaflet": "^4.2.1",
     "react-leaflet-cluster": "^2.1.0",
+    "react-leaflet-draw": "^0.20.4",
     "sass": "^1.77.4"
   },
   "devDependencies": {
