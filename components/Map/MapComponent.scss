@@ -5,6 +5,9 @@
   align-items: center;
 }
 
+/**
+* 필수 : 리플릿 맵은 높이를 지정해야 함
+*/
 .leaflet-container {
   width: 80%;
   height: 100vh;

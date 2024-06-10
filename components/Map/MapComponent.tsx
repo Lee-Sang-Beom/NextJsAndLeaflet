@@ -9,11 +9,19 @@ import {
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 
-// leaflet은 css가 필요함!
+// leaflet은 css가 필요함
 import "./MapComponent.scss";
 import styles from "./MapComponent.module.scss";
 import { DivIcon, Icon, LatLng, point } from "leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
+import {
+  DEFAULT_LEAFLET_ZOOM_LEVEL,
+  DEFAULT_LEAFLET_ZOOM_MAX_ZOOM,
+  DEFAULT_LEAFLET_ZOOM_MIN_ZOOM,
+  alidadeSmoothDarkOSMProvider,
+  baseOSMProvider,
+} from "@/utils/Map/Leaflet/osmProvider";
+import useGeoLocation from "@/hooks/Map/Leaflet/useGeoLocation";
 
 /**
  *
@@ -56,6 +64,8 @@ const MapComponent = () => {
   const customIcon = new Icon({
     iconUrl: "/img/marker.svg",
     iconSize: [24, 24],
+    // iconAnchor: [17, 46], // icon 베이스 위치: [left/right, top/bottom]
+    popupAnchor: [0, -20], // y축으로부터 20만큼 위로 이동한 곳에 마커 찍기
   });
 
   /**
@@ -76,6 +86,8 @@ const MapComponent = () => {
       html: `<div class="cluster-icon">${cluster.getChildCount()}</div>`,
       className: "custom-marker-cluster",
       iconSize: point(33, 33, true),
+      iconAnchor: [17, 46],
+      popupAnchor: [3, -46],
     });
   };
 
@@ -83,7 +95,7 @@ const MapComponent = () => {
     const map = useMapEvents({
       // 지도가 초기화될 때(중심과 확대/축소가 처음으로 설정될 때) 시작됩니다.
       load(e) {
-        console.log("지도초기화!!");
+        // console.log("지도초기화!!");
       },
 
       click(e) {
@@ -115,12 +127,12 @@ const MapComponent = () => {
       },
 
       autopanstart(e) {
-        console.log("팝업을 열 때 지도가 자동 이동을 시작하면 시작됩니다.", e);
+        // console.log("팝업을 열 때 지도가 자동 이동을 시작하면 시작됩니다.", e);
       },
 
       // 지도 보기가 변경되기 시작할때
       movestart(e) {
-        console.log("움직이기 시작!!");
+        // console.log("움직이기 시작!!");
       },
 
       move(e) {
@@ -134,7 +146,7 @@ const MapComponent = () => {
       moveend(e) {
         const moveEvent = map.locate();
         const currentMapCenter = moveEvent.getCenter();
-        console.log("움직이기 종료!!", currentMapCenter);
+        // console.log("움직이기 종료!!", currentMapCenter);
 
         // setTimeout(() => {
         //   // 클러스터 애니메이션을 다 보고 움직이고 싶으면 0.5초 정도 간격을 주고 실행
@@ -148,14 +160,14 @@ const MapComponent = () => {
         const flyTargetLatLng = e.popup.getLatLng();
         if (flyTargetLatLng) {
           // 이거 클릭한건 markerData에 있는 latlng와 동일
-          console.log("flyTargetLatLng", flyTargetLatLng);
-          map.flyTo(flyTargetLatLng, map.getZoom());
+          // console.log("flyTargetLatLng", flyTargetLatLng);
+          // map.flyTo(flyTargetLatLng, map.getZoom());
         }
       },
 
       // 팝업 닫힐 때 실행
       popupclose(e) {
-        console.log("닫힘!!");
+        // console.log("닫힘!!");
       },
     });
 
@@ -170,7 +182,7 @@ const MapComponent = () => {
               title={marker.popup}
             >
               <Popup>
-                <div>
+                <div className="popup_wrap">
                   <div className={"title"}>Hello Popup</div>
                   <div className={"desc"}>THIS IS</div>
                   <div className={"desc"}>{marker.popup}</div>
@@ -182,6 +194,9 @@ const MapComponent = () => {
       </>
     );
   };
+
+  const location = useGeoLocation();
+  console.log("location is ", location);
 
   return (
     <>
@@ -213,27 +228,29 @@ const MapComponent = () => {
               <div className={styles.event_btn_box}></div>
             </div>
           </section>
+
+          {/* 뭔가를 추가할 때마다 저작권 창에 하나씩 뭔가 추가가됨 */}
           <MapContainer
             // https://leafletjs.com/reference.html#map-methods-for-getting-map-state
             center={position}
-            zoom={13}
-            minZoom={12}
-            maxZoom={16}
+            zoom={DEFAULT_LEAFLET_ZOOM_LEVEL}
+            minZoom={DEFAULT_LEAFLET_ZOOM_MIN_ZOOM}
+            maxZoom={DEFAULT_LEAFLET_ZOOM_MAX_ZOOM}
             zoomControl={true}
             scrollWheelZoom={true}
             closePopupOnClick={true}
             // zoomSnap={2}
           >
             <TileLayer
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              attribution={baseOSMProvider.maptiler.atttribution}
+              url={baseOSMProvider.maptiler.url}
             />
 
             {/* leaflet skin이라고 검색하고 끼워넣으면 됨 */}
             {/* <TileLayer
-            attribution='&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url="https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png"
-          /> */}
+              attribution={alidadeSmoothDarkOSMProvider.maptiler.atttribution}
+              url={alidadeSmoothDarkOSMProvider.maptiler.url}
+            /> */}
             {/* 특정 줌 이하가 되면 몇건이 모여있는지 표시함 */}
             <MarkerClusterGroup
               chunkedLoading
