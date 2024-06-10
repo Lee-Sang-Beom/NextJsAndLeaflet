@@ -1,0 +1,36 @@
+.section_top {
+  border: 1px solid gray;
+
+  .event_desc {
+    width: 100%;
+    display: flex;
+    padding: 5px;
+
+    .desc_title {
+      font-size: 16px;
+      font-weight: 700;
+    }
+    .desc_value {
+      font-size: 16px;
+    }
+  }
+}
+
+.section_bottom {
+  margin-top: 20px;
+  border: 1px solid gray;
+
+  .event_btn_box {
+    width: 100%;
+    display: flex;
+    padding: 5px;
+
+    .desc_title {
+      font-size: 16px;
+      font-weight: 700;
+    }
+    .desc_value {
+      font-size: 16px;
+    }
+  }
+}

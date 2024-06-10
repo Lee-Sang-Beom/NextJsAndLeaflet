@@ -34,7 +34,7 @@ const MapComponent = () => {
   const customIcon = new Icon({
     iconUrl: "/img/marker.svg",
     iconSize: [24, 24],
-    // iconAnchor: [17, x46],
+    // iconAnchor: [17, 46],
     popupAnchor: [0, -20],
   });
 

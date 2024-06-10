@@ -6,11 +6,11 @@ import {
   Marker,
   Popup,
   TileLayer,
+  useMap,
   useMapEvents,
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-
-// leaflet은 css가 필요함
+import L from "leaflet";
 import "./MapComponent.scss";
 import styles from "./MapComponent.module.scss";
 import { DivIcon, Icon, LatLng, icon, point, polygon } from "leaflet";
@@ -27,6 +27,7 @@ import useGeoLocation, {
 } from "@/hooks/Map/Leaflet/useGeoLocation";
 import { EditControl } from "react-leaflet-draw";
 import "leaflet-draw/dist/leaflet.draw.css";
+import "leaflet-easyprint";
 
 Icon.Default.mergeOptions({
   // iconRetinaUrl: "",
@@ -34,27 +35,17 @@ Icon.Default.mergeOptions({
   iconSize: [40, 60],
   // shadowUrl: "",
 });
-/**
- *
- * @참고자료 : https://leafletjs.com/reference.html
- */
+
 const MapComponent = () => {
   const mapRef = useRef<any>(null);
-  /**
-   * @position : 창원 시청 중심좌표
-   */
   const position = { lat: 35.22783, lng: 128.679315 };
 
   const customIcon = new Icon({
     iconUrl: "/img/marker.svg",
     iconSize: [24, 24],
-    // iconAnchor: [17, 46],
     popupAnchor: [0, -20],
   });
 
-  /**
-   * 사용자 위치 정보를 불러오는 useGeoLocation hooks 사용
-   */
   const [loadLocation, setLoadLocation] = useState<GeoLocationProps | null>(
     null
   );
@@ -66,6 +57,35 @@ const MapComponent = () => {
   }, [location]);
 
   const _created = (e: any) => console.log(e);
+
+  const controlPrint = useRef(null);
+
+  const handleDownload = () => {
+    if (controlPrint && controlPrint.current) {
+      console.log("에러는 어디에?");
+      // @ts-ignore
+      controlPrint.current.printMap("A4Portrait", "MyFileName");
+    }
+  };
+
+  const MapPrint = ({ controlRef }: any) => {
+    const map = useMap();
+
+    useEffect(() => {
+      if (!map || controlRef.current) return;
+
+      // @ts-ignore
+      controlRef.current = L.easyPrint({
+        title: "My awesome print button",
+        position: "bottomright",
+        sizeModes: ["A4Portrait", "A4Landscape"],
+      }).addTo(map);
+
+      console.log("마무리");
+    }, [map]);
+
+    return null;
+  };
 
   return (
     <>
@@ -88,6 +108,15 @@ const MapComponent = () => {
               >
                 현재 위치로 이동
               </button>
+              {/* <button
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  zIndex: 9999,
+                }}
+                onClick={handleDownload}
+              >DOWNLOAD</button> */}
             </div>
           </div>
         </section>
@@ -121,7 +150,9 @@ const MapComponent = () => {
               }}
             />
           </FeatureGroup>
-
+          <FeatureGroup>
+            <MapPrint controlRef={controlPrint} />
+          </FeatureGroup>
           {loadLocation && loadLocation.coordinates ? (
             <Marker
               position={loadLocation!.coordinates}
