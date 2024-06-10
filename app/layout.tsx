@@ -19,7 +19,7 @@ export default function RootLayout({
         <div className="abox">
           <a href="/DownloadAndPrint">다운로드/프린트</a>
           <a href="/Shape">Draw</a>
-          <a href="/Shape">Static</a>
+          <a href="/Static">Static</a>
         </div>
 
         {children}
