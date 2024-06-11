@@ -14,8 +14,8 @@
   height: calc(100vh - 30px);
 }
 .static-map {
-  width: 250px;
-  height: 250px;
+  width: 250px !important;
+  height: 250px !important;
   position: absolute;
   top: 20px;
   left: 20px;
