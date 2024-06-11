@@ -5,32 +5,31 @@ import {
   CircleMarker,
   FeatureGroup,
   MapContainer,
-  Marker,
   Polygon,
   Polyline,
   Popup,
   Rectangle,
   TileLayer,
-  useMapEvents,
+  useMap,
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 
 // leaflet은 css가 필요함
 import "./MapComponent.scss";
 import styles from "./MapComponent.module.scss";
-import { DivIcon, Icon, LatLng, icon, point, polygon } from "leaflet";
-import MarkerClusterGroup from "react-leaflet-cluster";
+import { Icon, LatLngTuple } from "leaflet";
+import L from "leaflet";
+import "leaflet-easyprint";
+
 import {
   DEFAULT_LEAFLET_ZOOM_LEVEL,
   DEFAULT_LEAFLET_ZOOM_MAX_ZOOM,
   DEFAULT_LEAFLET_ZOOM_MIN_ZOOM,
-  alidadeSmoothDarkOSMProvider,
   baseOSMProvider,
 } from "@/utils/Map/Leaflet/osmProvider";
 import useGeoLocation, {
   GeoLocationProps,
 } from "@/hooks/Map/Leaflet/useGeoLocation";
-import { EditControl } from "react-leaflet-draw";
 import "leaflet-draw/dist/leaflet.draw.css";
 
 Icon.Default.mergeOptions({
@@ -122,13 +121,53 @@ const MapComponent = () => {
     { lat: 35.54042520806185, lng: 128.61925766494147 },
     { lat: 35.540199191938146, lng: 128.602 },
   ];
+  const multiPolygon = [
+    [
+      { lat: 35.3, lng: 128.59 },
+      { lat: 35.153285, lng: 128.6722 },
+      { lat: 35.24042520806185, lng: 128.5 },
+      { lat: 35.1040199191938146, lng: 128.72 },
+    ],
+    [
+      { lat: 35.22, lng: 128.31 },
+      { lat: 35.293285, lng: 128.422 },
+      { lat: 35.24042520806185, lng: 128.57 },
+      { lat: 35.3540199191938146, lng: 128.49 },
+    ],
+  ];
 
+  const rectangle: LatLngTuple[] = [
+    [35.24042520806185, 128.64925766494147],
+    [35.240199191938146, 128.64898093505852],
+  ];
   const fillBlueOptions = { fillColor: "blue", weight: 8 };
   const blackOptions = { color: "black", weight: 8 };
-  const limeOptions = { color: "lime", weight: 8 };
   const cyanOptions = { color: "cyan", weight: 8 };
   const purpleOptions = { color: "purple", weight: 8 };
+  const limeOptions = { color: "lime", weight: 8 };
   const redOptions = { color: "red", weight: 8 };
+  const greenOptions = { color: "green", weight: 8 };
+
+  // print
+  const controlPrint = useRef(null);
+  const MapPrint = ({ controlRef }: any) => {
+    const map = useMap();
+
+    useEffect(() => {
+      if (!map || controlRef.current) return;
+
+      // @ts-ignore
+      controlRef.current = L.easyPrint({
+        title: "My awesome print button",
+        position: "bottomright",
+        sizeModes: ["A4Portrait", "A4Landscape"],
+      }).addTo(map);
+
+      console.log("마무리");
+    }, [map]);
+
+    return null;
+  };
 
   return (
     <>
@@ -174,7 +213,9 @@ const MapComponent = () => {
                 attribution={baseOSMProvider.maptiler.atttribution}
                 url={baseOSMProvider.maptiler.url}
               />
-
+              <FeatureGroup>
+                <MapPrint controlRef={controlPrint} />
+              </FeatureGroup>
               {/* 추가 1: 현재 좌표를 기준으로 300m */}
               <Circle
                 center={loadLocation.coordinates}
@@ -193,14 +234,21 @@ const MapComponent = () => {
                 <Popup>200 픽셀 테스트</Popup>
               </CircleMarker>
 
-              <Polyline pathOptions={blackOptions} positions={polyLineList} />
-              <Polyline
-                pathOptions={cyanOptions}
-                positions={multiPolyLineList}
-              />
-              <Polygon pathOptions={purpleOptions} positions={polygon} />
-              {/* <Polygon pathOptions={purpleOptions} positions={multiPolygon} /> */}
-              {/* <Rectangle bounds={rectangle} pathOptions={blackOptions} /> */}
+              <Polyline pathOptions={blackOptions} positions={polyLineList}>
+                <Popup>폴리라인 테스트</Popup>
+              </Polyline>
+              <Polyline pathOptions={cyanOptions} positions={multiPolyLineList}>
+                <Popup>멀티 폴리라인 테스트</Popup>
+              </Polyline>
+              <Polygon pathOptions={purpleOptions} positions={polygon}>
+                <Popup>폴리곤 테스트</Popup>
+              </Polygon>
+              <Polygon pathOptions={limeOptions} positions={multiPolygon}>
+                <Popup>멀티 폴리곤 테스트</Popup>
+              </Polygon>
+              <Rectangle bounds={rectangle} pathOptions={greenOptions}>
+                <Popup>Rectangle 테스트</Popup>
+              </Rectangle>
             </MapContainer>
           </div>
         </>
