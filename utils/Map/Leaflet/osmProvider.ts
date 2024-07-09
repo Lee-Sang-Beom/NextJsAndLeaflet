@@ -18,5 +18,5 @@ export const alidadeSmoothDarkOSMProvider = {
 };
 
 export const DEFAULT_LEAFLET_ZOOM_LEVEL = 13;
-export const DEFAULT_LEAFLET_ZOOM_MIN_ZOOM = 10;
+export const DEFAULT_LEAFLET_ZOOM_MIN_ZOOM = 0;
 export const DEFAULT_LEAFLET_ZOOM_MAX_ZOOM = 18;
