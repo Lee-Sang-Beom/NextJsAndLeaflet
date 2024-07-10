@@ -27,6 +27,8 @@ import "leaflet-draw/dist/leaflet.draw.css";
 import { statesData } from "./state";
 import "./legend.scss";
 
+// example : 미국 인구 밀도를 시각화하는 대화형 코로플레스 지도
+
 Icon.Default.mergeOptions({
   // iconRetinaUrl: "",
   iconUrl: "/img/catMarker.jpg",
@@ -38,6 +40,7 @@ Icon.Default.mergeOptions({
  *
  * @참고자료1 : https://leafletjs.com/reference.html
  * @참고자료2 : https://react-leaflet.js.org/docs/example-vector-layers/
+ * @참고자료3(대화형 코로플레스 지도) : https://leafletjs.com/examples/choropleth/
  */
 const MapComponent = () => {
   const mapRef = useRef<any>(null);
@@ -92,7 +95,7 @@ const MapComponent = () => {
     };
   }
 
-  // 상호작용
+  // 상호작용 : 지도 상의 특정 피처(예: 폴리곤)에 마우스가 올라갔을 때 그 피처를 강조하는 역할을 합니다. 이 함수는 Leaflet의 mouseover 이벤트 핸들러로 사용됩니다.
   function highlightFeature(e: any) {
     var layer = e.target;
 
@@ -102,20 +105,21 @@ const MapComponent = () => {
       dashArray: "",
       fillOpacity: 0.7,
     });
-    info.update(layer.feature.properties);
-    layer.bringToFront();
+    info.update(layer.feature.properties); // update 메소드를 호출하여, 현재 강조된 피처의 속성 정보를 업데이트합니다.
+    layer.bringToFront(); // layer.bringToFront()은 해당 레이어를 다른 모든 레이어 위로 가져옵니다. 이는 피처가 강조될 때 다른 피처들보다 앞에 보이도록 하기 위함입니다.
   }
 
   function resetHighlight(e: any) {
     if (geoJsonRef.current) {
-      geoJsonRef.current.resetStyle(e.target);
+      geoJsonRef.current.resetStyle(e.target); // 스타일 리셋: 이 함수는 highlightFeature 함수에서 강조된 피처의 스타일을 원래 상태로 되돌립니다.
     }
-    info.update();
+
+    info.update(); // 정보 업데이트 초기화: 지도에 표시된 정보 컨트롤을 기본 상태로 초기화합니다.
   }
 
   function zoomToFeature(e: any) {
     console.log("e is ", e);
-    mapRef.current.fitBounds(e.target.getBounds());
+    mapRef.current.fitBounds(e.target.getBounds()); //  클릭된 피처의 경계(bounds)에 맞춰 지도를 확대하고 이동합니다. fitBounds 메소드는 지정된 경계에 맞춰 지도의 중심과 확대 수준을 조정합니다.
   }
 
   function onEachFeature(feature: any, layer: any) {
@@ -225,7 +229,7 @@ const MapComponent = () => {
               <GeoJSON
                 data={statesData}
                 style={getStyle}
-                onEachFeature={onEachFeature}
+                onEachFeature={onEachFeature} // onEachFeature prop은 GeoJSON 컴포넌트의 각 개별 피처(폴리곤, 라인, 포인트 등)에 이벤트 핸들러를 설정하기 위해 사용됩니다. 이를 통해 각 피처에 대해 상호작용을 정의할 수 있습니다. 이 예제에서는 onEachFeature 함수가 폴리곤에 마우스를 올렸을 때 하이라이트하고, 마우스를 벗어났을 때 하이라이트를 해제하며, 클릭 시 해당 영역으로 지도를 확대하는 기능을 제공합니다.
                 ref={geoJsonRef} // Attach the ref to GeoJSON
               />
               <Legend />

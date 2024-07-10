@@ -23,6 +23,8 @@ export default function RootLayout({
           <a href="/Static">Static</a>
           <a href="/Vector">Vector</a>
           <a href="/InteractiveChoroplethMap">동적 지도</a>
+          <a href="/Hole">Hole</a>
+          <a href="/Grid">Grid</a>
         </div>
 
         {children}

@@ -142,6 +142,7 @@ const MapComponent = () => {
          *  - mapLocate.getZoom(), mapLocate.getMinZoom(), mapLocate.getMaxZoom()
          */
         const mapLocate = map.locate();
+        console.log("mapLocate ", mapLocate);
         setCenterLatLng(mapLocate.getCenter());
 
         /**
@@ -191,7 +192,6 @@ const MapComponent = () => {
       movestart(e) {
         const moveEvent = map.locate();
         const currentMapCenter = moveEvent.getCenter();
-        console.log("moveStart ", currentMapCenter);
       },
 
       // Event 가짐
@@ -204,7 +204,6 @@ const MapComponent = () => {
       moveend(e) {
         const moveEvent = map.locate();
         const currentMapCenter = moveEvent.getCenter();
-        console.log("moveEnd ", currentMapCenter);
       },
 
       // Event 가짐
@@ -212,7 +211,6 @@ const MapComponent = () => {
       zoomstart(e) {
         const moveEvent = map.locate();
         const currentZoom = moveEvent.getZoom();
-        console.log("zoomStart ", currentZoom);
       },
 
       // Event 가짐
@@ -224,7 +222,6 @@ const MapComponent = () => {
       zoomend(e) {
         const moveEvent = map.locate();
         const currentZoom = moveEvent.getZoom();
-        console.log("zoomEnd ", currentZoom);
       },
 
       // PopupEvent 가짐
